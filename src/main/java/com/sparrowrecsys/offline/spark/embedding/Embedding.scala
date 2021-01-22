@@ -56,8 +56,7 @@ object Embedding {
       println(s"$synonym $cosineSimilarity")
     }
 
-    val embFolderPath = "resources"
-    val file = new File(embFolderPath + embOutputFilename)
+    val file = new File(embOutputFilename)
     val bw = new BufferedWriter(new FileWriter(file))
     for (movieId <- model.getVectors.keys) {
       bw.write(movieId + ":" + model.getVectors(movieId).mkString(" ") + "\n")
@@ -72,6 +71,12 @@ object Embedding {
     model
   }
 
+  /**
+   * 局部敏感哈希：解决向量最近邻搜索问题
+   *
+   * @param spark
+   * @param movieEmbMap
+   */
   def embeddingLSH(spark: SparkSession, movieEmbMap: Map[String, Array[Float]]): Unit = {
 
     val movieEmbSeq = movieEmbMap.toSeq.map(item => (item._1, Vectors.dense(item._2.map(f => f.toDouble))))
@@ -104,10 +109,15 @@ object Embedding {
       .appName("Embedding")
       .getOrCreate()
 
-    val rawSampleDataPath = "resources/ratings.csv"
+    /**
+     * args(0): 输入文件全路径（本地文件注意用file:// 当前缀，如：file:///opt/module/spark-2.4.3/resources/ratings.csv）
+     * args(1): 输出文件全路径（如：/opt/module/spark-2.4.3/resources/item2vecEmb.csv）
+     */
+    val rawSampleDataPath = args(0)
+    val exportDataPath = args(1)
     val embLength = 10
 
     val samples = processItemSequence(sparkSession, rawSampleDataPath)
-    trainItem2vec(sparkSession, samples, embLength, "item2vecEmb.csv", saveToRedis = false, "i2vEmb")
+    trainItem2vec(sparkSession, samples, embLength, exportDataPath, saveToRedis = false, "i2vEmb")
   }
 }

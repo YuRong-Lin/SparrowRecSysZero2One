@@ -34,12 +34,9 @@ object FeatureEngineering {
       .appName("FeatureEngineering")
       .getOrCreate()
 
-    // 数据文件需上传到集群服务器对应路径
-    val filepath = "resources/movies.csv"
-    val movieSamples = sparkSession.read
-      .format("csv")
-      .option("header", "true")
-      .load(filepath)
+    // 文件路径通过args参数传递（注：本地文件访问需要用file:// 当前缀）
+    val filepath = args(0)
+    val movieSamples = sparkSession.read.format("csv").option("header", "true").load(filepath)
 
     println("Raw movie Samples:")
     movieSamples.printSchema()
