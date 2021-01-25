@@ -113,15 +113,15 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
 
        <!-- 指定HDFS中NameNode的地址 -->
        <property>
-	   <name>fs.defaultFS</name>
-	   <value>hdfs://rec-hadoop01:9000</value>
+	       <name>fs.defaultFS</name>
+	       <value>hdfs://rec-hadoop01:9000</value>
        </property>
 
 	<!-- 指定Hadoop运行时产生文件的存储目录 -->
 	
        <property>
-	   <name>hadoop.tmp.dir</name>
-	   <value>/opt/module/hadoop-2.7.2/tmp</value>
+	       <name>hadoop.tmp.dir</name>
+	       <value>/opt/module/hadoop-2.7.2/tmp</value>
        </property>
     
     
@@ -135,15 +135,15 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
  
  
         <property>
-             <name>dfs.replication</name>
-             <value>3</value>
+	       <name>dfs.replication</name>
+	       <value>3</value>
     	</property>
     
         <!-- 指定Hadoop辅助名称节点主机配置 -->
 	
         <property>
-             <name>dfs.namenode.secondary.http-address</name>
-             <value>rec-hadoop03:50090</value>
+	       <name>dfs.namenode.secondary.http-address</name>
+	       <value>rec-hadoop03:50090</value>
         </property>
     
     
@@ -158,32 +158,32 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
 
         <!-- Reducer获取数据的方式 -->
         <property>
-	   <name>yarn.nodemanager.aux-services</name>
-	   <value>mapreduce_shuffle</value>
+	       <name>yarn.nodemanager.aux-services</name>
+	       <value>mapreduce_shuffle</value>
         </property>
     
         <!-- 指定YARN的ResourceManager的地址 -->
         <property>
-	   <name>yarn.resourcemanager.hostname</name>
-	   <value>rec-hadoop02</value>
+	       <name>yarn.resourcemanager.hostname</name>
+	       <value>rec-hadoop02</value>
         </property>      
     
         <!-- 日志聚集功能使能 -->
         <property>
-	   <name>yarn.log-aggregation-enable</name>
-	   <value>true</value>
+	       <name>yarn.log-aggregation-enable</name>
+	       <value>true</value>
         </property>
     
         <!-- 日志保留时间设置3天 -->
         <property>
-	   <name>yarn.log-aggregation.retain-seconds</name>
-	   <value>259200</value>
+	       <name>yarn.log-aggregation.retain-seconds</name>
+	       <value>259200</value>
         </property>
     
         <!-- 日志链接跳转地址 -->
         <property>
-	   <name>yarn.log.server.url</name>
-	   <value>http://rec-hadoop03:19888/jobhistory/logs</value>
+	       <name>yarn.log.server.url</name>
+	       <value>http://rec-hadoop03:19888/jobhistory/logs</value>
         </property>      
     
     
@@ -201,19 +201,19 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     
         <!-- 指定MR运行在Yarn上 -->
         <property>
-	   <name>mapreduce.framework.name</name>
-	   <value>yarn</value>
+	       <name>mapreduce.framework.name</name>
+	       <value>yarn</value>
         </property>
     
         <!-- 历史服务器端地址 -->
         <property>
-	   <name>mapreduce.jobhistory.address</name>
-	   <value>rec-hadoop03:10020</value>
+	       <name>mapreduce.jobhistory.address</name>
+	       <value>rec-hadoop03:10020</value>
         </property>
         <!-- 历史服务器web端地址 -->
         <property>
-	   <name>mapreduce.jobhistory.webapp.address</name>
-	   <value>rec-hadoop03:19888</value>
+	       <name>mapreduce.jobhistory.webapp.address</name>
+	       <value>rec-hadoop03:19888</value>
         </property>
 
 
