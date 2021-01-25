@@ -1,0 +1,396 @@
+# SparrowRecSysZero2One
+本项目参考[SparrowRecSys](https://github.com/wzhe06/SparrowRecSys.git)实现，从0到1实践一个深度学习推荐系统的完整过程记录。
+
+## 环境搭建
+
+### scala环境
+1、mac安装
+
+brew install scala@2.11
+
+    scala@2.11 is keg-only, which means it was not symlinked into /usr/local,
+    because this is an alternate version of another formula.
+    
+    If you need to have scala@2.11 first in your PATH run:
+    echo 'export PATH="/usr/local/opt/scala@2.11/bin:$PATH"' >> ~/.zshrc
+    echo 'export PATH="/usr/local/opt/scala@2.11/bin:$PATH"' >> ~/.zshrc
+
+问题：安装包下多了一个idea目录（软连接），导致项目编译时报存在多个scala-library.jar包。
+
+解决：删掉idea目录即可。
+
+2、windows安装
+
+下载链接：https://www.scala-lang.org/download/2.11.12.html
+
+下载该包： scala-2.11.12.msi	Windows (msi installer)	109.82M
+
+配置环境变量：
+
+* 新建系统变量SCALA_HOME：　D:\Program Files (x86)\scala
+* PATH：　D:\Program Files (x86)\scala\bin
+
+验证： scala -version  
+
+### hadoop集群
+hadoop集群采用apache hadoop 2.7.2版本、spark采用2.4.3版本。
+
+#### hadoop
+注：hadoop有多种运行模式：本地运行模式、伪分布运行环境、完全分布式运行环境。本项目搭建完全分布式运行环境。
+
+##### 步骤
+1）准备3台客户机（关闭防火墙、静态ip、主机名称）  
+2）安装JDK  
+3）配置环境变量  
+4）安装Hadoop  
+5）配置环境变量  
+6）配置集群  
+7）单点启动  
+8）配置ssh  
+9）群起并测试集群  
+
+##### 安装hadoop
+1. Hadoop下载地址：  
+https://archive.apache.org/dist/hadoop/common/hadoop-2.7.2/  
+将安装包下载到 /opt/software
+
+2. 安装路径：/opt/module  
+tar -zxvf hadoop-2.7.2.tar.gz -C /opt/module/
+
+3. 将Hadoop添加到环境变量和验证  
+
+vim /etc/profile  
+
+
+    ##HADOOP_HOME
+    export HADOOP_HOME=/opt/module/hadoop-2.7.2
+    export PATH=$PATH:$HADOOP_HOME/bin
+    export PATH=$PATH:$HADOOP_HOME/sbin
+    
+    # 保存、生效
+    source /etc/profile
+    
+    # 验证
+    hadoop version
+
+
+4. 重要目录：  
+* bin目录：存放对Hadoop相关服务（HDFS,YARN）进行操作的脚本  
+* etc目录：Hadoop的配置文件目录，存放Hadoop的配置文件  
+* lib目录：存放Hadoop的本地库（对数据进行压缩解压缩功能）  
+* sbin目录：存放启动或停止Hadoop相关服务的脚本  
+* share目录：存放Hadoop的依赖jar包、文档、和官方案例  
+
+##### 集群配置
+1. 修改hostname
+    
+    
+    每台机分别执行：hostnamectl set-hostname rec-hadoop01/rec-hadoop02/rec-hadoop03
+    
+2. 集群部署规划
+--------
+
+| | rec-hadoop01 | rec-hadoop02 | rec-hadoop03 |  
+---------- | ---------- | --------| -------- |
+HDFS | NameNode/DataNode | DataNode | SecondaryNameNode/DataNode | 
+YARN | NodeManager  | ResourceManager/NodeManager | NodeManager |
+
+3. 集群配置
+
+* 配置文件说明  
+Hadoop配置文件分两类：默认配置文件和自定义配置文件，只有用户想修改某一默认配置值时，才需要修改自定义配置文件，更改相应属性值。  
+    * 默认配置文件：
+    
+| | |
+------- | -------- |
+要获取的默认文件 | 文件存放在Hadoop的jar包中的位置 |  
+[core-default.xml] | hadoop-common-2.7.2.jar/ core-default.xml |
+[hdfs-default.xml] | hadoop-hdfs-2.7.2.jar/ hdfs-default.xml |
+[yarn-default.xml] | hadoop-yarn-common-2.7.2.jar/ yarn-default.xml |
+[mapred-default.xml] | hadoop-mapreduce-client-core-2.7.2.jar/ mapred-default.xml |  
+
+* 自定义配置文件：  
+core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文件存放在$HADOOP_HOME/etc/hadoop这个路径上，用户可以根据项目需求重新进行修改配置。
+
+* 核心配置文件
+    * 配置core-site.xml
+    
+    
+    <!-- 指定HDFS中NameNode的地址 -->
+    <property>
+            <name>fs.defaultFS</name>
+          <value>hdfs://rec-hadoop01:9000</value>
+    </property>
+    
+    <!-- 指定Hadoop运行时产生文件的存储目录 -->
+    <property>
+            <name>hadoop.tmp.dir</name>
+            <value>/opt/module/hadoop-2.7.2/tmp</value>
+    </property>
+    
+ * HDFS配置文件
+    * hadoop-env.sh
+    
+    
+    export JAVA_HOME=/opt/module/jdk1.8.0_181
+        
+   * hdfs-site.xml
+   
+   
+    <property>
+        <name>dfs.replication</name>
+        <value>3</value>
+    </property>
+    
+    <!-- 指定Hadoop辅助名称节点主机配置 -->
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>rec-hadoop03:50090</value>
+    </property>
+    
+* YARN配置文件
+   * yarn-env.sh 
+    
+    
+    export JAVA_HOME=/opt/module/jdk1.8.0_181
+        
+   * yarn-site.xml
+   
+   
+    <!-- Reducer获取数据的方式 -->
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+    
+    <!-- 指定YARN的ResourceManager的地址 -->
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>rec-hadoop02</value>
+    </property>      
+    
+    <!-- 日志聚集功能使能 -->
+    <property>
+       <name>yarn.log-aggregation-enable</name>
+       <value>true</value>
+    </property>
+
+    <!-- 日志保留时间设置3天 -->
+    <property>
+       <name>yarn.log-aggregation.retain-seconds</name>
+       <value>259200</value>
+    </property>
+
+    <!-- 日志链接跳转地址 -->
+    <property>
+       <name>yarn.log.server.url</name>
+       <value>http://rec-hadoop03:19888/jobhistory/logs</value>
+    </property>      
+    
+    
+* MapReduce配置文件
+   * mapred-env.sh
+    
+    
+    export JAVA_HOME=/opt/module/jdk1.8.0_181
+     
+   * mapred-site.xml    
+    
+    
+    cp mapred-site.xml.template mapred-site.xml
+    vim mapred-site.xml
+    
+    <!-- 指定MR运行在Yarn上 -->
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+    
+    <!-- 历史服务器端地址 -->
+    <property>
+       <name>mapreduce.jobhistory.address</name>
+       <value>rec-hadoop03:10020</value>
+    </property>
+    <!-- 历史服务器web端地址 -->
+    <property>
+       <name>mapreduce.jobhistory.webapp.address</name>
+       <value>rec-hadoop03:19888</value>
+    </property>
+
+
+4. 集群单点启动(一般不采用这种方式，效率太低，而是采用群起集群)
+*　如果集群是第一次启动，需要格式化NameNode
+
+   
+    hadoop namenode -format
+    
+* 在rec-hadoop01上启动NameNode
+
+
+    hadoop-daemon.sh start namenode
+    jps
+    
+* 在rec-hadoop01、rec-hadoop02以及rec-hadoop03上分别启动DataNode
+
+
+    hadoop-daemon.sh start datanode
+    jps
+    
+    
+5. SSH 无密登录配置
+
+* 免密登录原理，如图2-40所示
+
+
+* 生成公钥和私钥：
+
+    
+    cd ~/.ssh
+    ssh-keygen -t rsa    
+    然后敲（三个回车），就会生成两个文件id_rsa（私钥）、id_rsa.pub（公钥）
+    
+ * 将公钥拷贝到要免密登录的目标机器上
+ 
+ 
+    ssh-copy-id rec-hadoop01   
+    ssh-copy-id rec-hadoop02
+    ssh-copy-id rec-hadoop03
+    
+**注意：以上步骤需要在3台主机上分别执行**  
+
+* .ssh文件夹下（~/.ssh）的文件功能解释
+
+ | | |
+--------- | --------|  
+known_hosts | 记录ssh访问过计算机的公钥(public key) |  
+id_rsa | 生成的私钥 |  
+id_rsa.pub | 生成的公钥 |  
+authorized_keys | 存放授权过得无密登录服务器公钥 |  
+
+
+6. 群起集群
+
+* 配置slaves
+
+
+    cd etc/hadoop/slaves
+    vim slaves
+    
+    增加：
+    rec-hadoop01
+    rec-hadoop02
+    rec-hadoop03
+    
+* 如果集群是第一次启动，需要格式化NameNode（注意格式化之前，一定要先停止上次启动的所有namenode和datanode进程，然后再删除data和log数据）
+
+    
+    cd /opt/module/hadoop-2.7.2
+    bin/hdfs namenode -format
+    
+    启动HDFS：
+    sbin/start-dfs.sh
+    jps
+    
+    启动YARN：
+    sbin/start-yarn.sh
+    
+** 注意：NameNode和ResourceManger如果不是同一台机器，不能在NameNode上启动 YARN，应该在ResouceManager所在的机器上启动YARN。 **
+
+7. 集群基本测试
+
+    
+    查看目录：
+    hadoop fs -ls /
+    或： hdfs dfs -ls /
+
+    创建目录：
+    hadoop fs -mkdir -p /user/root/input
+    或：hdfs dfs -mkdir -p /user/root/input
+    
+    上传文件：
+    hadoop fs -put wcinput/wc.input /user/root/input
+    或：hdfs dfs -put wcinput/wc.input /user/root/input
+
+    文件所在路径：
+    /opt/module/hadoop-2.7.2/tmp/dfs/data/current
+    
+    下载文件：
+    hadoop fs -get /user/root/input/wc.input ./
+    
+    删除文件：
+    hadoop fs -rm -r /user/root/output
+    
+8. 集群启动/停止方式总结  
+   * 各个服务组件逐一启动/停止  
+        * 分别启动/停止HDFS组件  
+   		hadoop-daemon.sh  start / stop  namenode / datanode / secondarynamenode  
+        * 启动/停止YARN  
+   		yarn-daemon.sh  start / stop  resourcemanager / nodemanager  
+   		* 启动历史服务器
+        sbin/mr-jobhistory-daemon.sh start historyserver  
+        查看JobHistory：http://rec-hadoop03:19888/jobhistory
+   		
+   * 各个模块分开启动/停止（配置ssh是前提）(常用)  
+   	    * 整体启动/停止HDFS  
+   		start-dfs.sh   /  stop-dfs.sh  
+        * 整体启动/停止YARN  
+   		start-yarn.sh  /  stop-yarn.sh  
+
+9. WordCount实例
+
+
+    hadoop fs -mkidr -p /test/input
+    hadoop fs -put wcinput/wc.input /test/input
+    hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount /test/input /test/wcoutput
+    hadoop fs -cat /test/wcoutput/part-r-00000
+        doop    1
+        hadoop  1
+        hello   1
+        mapreduce       1
+        world   1
+        yarn    1
+
+10. 界面查看
+
+    
+    hdfs：
+    http://rec-hadoop01:50070/dfshealth.html#tab-overview
+    
+    yarn：
+    http://rec-hadoop02:8088/cluster/cluster
+    http://rec-hadoop03:19888/jobhistory
+
+#### spark运行环境
+1、Maven方式
+
+    <dependency>
+        <groupId>org.apache.spark</groupId>
+        <artifactId>spark-core_${scala.version}</artifactId>
+        <version>${spark.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
+    <dependency>
+        <groupId>org.apache.spark</groupId>
+        <artifactId>spark-sql_${scala.version}</artifactId>
+        <version>${spark.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib -->
+    <dependency>
+        <groupId>org.apache.spark</groupId>
+        <artifactId>spark-mllib_${scala.version}</artifactId>
+        <version>${spark.version}</version>
+    </dependency>
+    
+采用该方式，在windows环境下启动spark，会报错：Could not locate executable null\bin\winutils.exe in the Hadoop binaries
+
+解决：需要安装hadoop在windows下的支持插件：
+
+	下载资源：
+	1）http://archive.apache.org/dist/hadoop/core/  找对应版本
+	2）https://github.com/cdarlint/winutils
+	
+在Path下配置好对应的bin路径即可。（如果未生效，可尝试重启电脑）
+
+2、本地运行模式
