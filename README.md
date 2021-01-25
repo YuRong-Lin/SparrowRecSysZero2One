@@ -135,15 +135,15 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
  
  
         <property>
-	       <name>dfs.replication</name>
-	       <value>3</value>
+	        <name>dfs.replication</name>
+	        <value>3</value>
     	</property>
     
         <!-- 指定Hadoop辅助名称节点主机配置 -->
 	
         <property>
-	       <name>dfs.namenode.secondary.http-address</name>
-	       <value>rec-hadoop03:50090</value>
+	        <name>dfs.namenode.secondary.http-address</name>
+	        <value>rec-hadoop03:50090</value>
         </property>
     
     
@@ -158,32 +158,32 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
 
         <!-- Reducer获取数据的方式 -->
         <property>
-	       <name>yarn.nodemanager.aux-services</name>
-	       <value>mapreduce_shuffle</value>
+	        <name>yarn.nodemanager.aux-services</name>
+	        <value>mapreduce_shuffle</value>
         </property>
     
         <!-- 指定YARN的ResourceManager的地址 -->
         <property>
-	       <name>yarn.resourcemanager.hostname</name>
-	       <value>rec-hadoop02</value>
+	        <name>yarn.resourcemanager.hostname</name>
+	        <value>rec-hadoop02</value>
         </property>      
     
         <!-- 日志聚集功能使能 -->
         <property>
-	       <name>yarn.log-aggregation-enable</name>
-	       <value>true</value>
+	        <name>yarn.log-aggregation-enable</name>
+	        <value>true</value>
         </property>
     
         <!-- 日志保留时间设置3天 -->
         <property>
-	       <name>yarn.log-aggregation.retain-seconds</name>
-	       <value>259200</value>
+	        <name>yarn.log-aggregation.retain-seconds</name>
+	        <value>259200</value>
         </property>
     
         <!-- 日志链接跳转地址 -->
         <property>
-	       <name>yarn.log.server.url</name>
-	       <value>http://rec-hadoop03:19888/jobhistory/logs</value>
+	        <name>yarn.log.server.url</name>
+	        <value>http://rec-hadoop03:19888/jobhistory/logs</value>
         </property>      
     
     
@@ -201,19 +201,19 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     
         <!-- 指定MR运行在Yarn上 -->
         <property>
-	       <name>mapreduce.framework.name</name>
-	       <value>yarn</value>
+	        <name>mapreduce.framework.name</name>
+	        <value>yarn</value>
         </property>
     
         <!-- 历史服务器端地址 -->
         <property>
-	       <name>mapreduce.jobhistory.address</name>
-	       <value>rec-hadoop03:10020</value>
+	        <name>mapreduce.jobhistory.address</name>
+	        <value>rec-hadoop03:10020</value>
         </property>
         <!-- 历史服务器web端地址 -->
         <property>
-	       <name>mapreduce.jobhistory.webapp.address</name>
-	       <value>rec-hadoop03:19888</value>
+	        <name>mapreduce.jobhistory.webapp.address</name>
+	        <value>rec-hadoop03:19888</value>
         </property>
 
 
@@ -260,9 +260,8 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
 
 ##### .ssh文件夹下（~/.ssh）的文件功能解释
 
- | | |
---------- | --------|  
 known_hosts | 记录ssh访问过计算机的公钥(public key) |  
+--------- | --------|  
 id_rsa | 生成的私钥 |  
 id_rsa.pub | 生成的公钥 |  
 authorized_keys | 存放授权过得无密登录服务器公钥 |  
@@ -281,7 +280,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     rec-hadoop02
     rec-hadoop03
     
-** 如果集群是第一次启动，需要格式化NameNode（注意格式化之前，一定要先停止上次启动的所有namenode和datanode进程，然后再删除data和log数据）**
+**如果集群是第一次启动，需要格式化NameNode（注意格式化之前，一定要先停止上次启动的所有namenode和datanode进程，然后再删除data和log数据）**
 
     
     cd /opt/module/hadoop-2.7.2
@@ -294,7 +293,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     启动YARN：
     sbin/start-yarn.sh
     
-** 注意：NameNode和ResourceManger如果不是同一台机器，不能在NameNode上启动 YARN，应该在ResouceManager所在的机器上启动YARN。 **
+**注意：NameNode和ResourceManger如果不是同一台机器，不能在NameNode上启动 YARN，应该在ResouceManager所在的机器上启动YARN。 **
 
 
 #### 集群基本测试
