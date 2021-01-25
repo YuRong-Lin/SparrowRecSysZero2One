@@ -60,9 +60,9 @@ tar -zxvf hadoop-2.7.2.tar.gz -C /opt/module/
 vim /etc/profile  
 
 
-    export HADOOP_HOME=/opt/module/hadoop-2.7.2
-    export PATH=$PATH:$HADOOP_HOME/bin
-    export PATH=$PATH:$HADOOP_HOME/sbin
+    export HADOOP_HOME=/opt/module/hadoop-2.7.2  
+    export PATH=$PATH:$HADOOP_HOME/bin  
+    export PATH=$PATH:$HADOOP_HOME/sbin  
     
     source /etc/profile
     
@@ -77,12 +77,12 @@ vim /etc/profile
 * share目录：存放Hadoop的依赖jar包、文档、和官方案例  
 
 #### 集群配置
-1. 修改hostname
+##### 修改hostname
     
     
     每台机分别执行：hostnamectl set-hostname rec-hadoop01/rec-hadoop02/rec-hadoop03
     
-2. 集群部署规划
+##### 集群部署规划
 
 | | rec-hadoop01 | rec-hadoop02 | rec-hadoop03 |  
 ---------- | ---------- | --------| -------- |
@@ -90,12 +90,12 @@ HDFS | NameNode/DataNode | DataNode | SecondaryNameNode/DataNode |
 YARN | NodeManager  | ResourceManager/NodeManager | NodeManager |
 
 
-3. 集群配置
+##### 集群配置
 
-* 配置文件说明  
+###### 配置文件说明  
 Hadoop配置文件分两类：默认配置文件和自定义配置文件，只有用户想修改某一默认配置值时，才需要修改自定义配置文件，更改相应属性值。  
     
-* 默认配置文件：
+####### 默认配置文件：
     
 要获取的默认文件 | 文件存放在Hadoop的jar包中的位置 |
 ------- | -------- |
@@ -104,10 +104,10 @@ Hadoop配置文件分两类：默认配置文件和自定义配置文件，只�
 [yarn-default.xml] | hadoop-yarn-common-2.7.2.jar/ yarn-default.xml |
 [mapred-default.xml] | hadoop-mapreduce-client-core-2.7.2.jar/ mapred-default.xml |  
 
-* 自定义配置文件：  
+####### 自定义配置文件：  
 core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文件存放在$HADOOP_HOME/etc/hadoop这个路径上，用户可以根据项目需求重新进行修改配置。
 
-* 核心配置文件
+###### 核心配置文件
 1) 配置core-site.xml  
 
 
@@ -124,7 +124,7 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     </property>
     
     
- * HDFS配置文件
+###### HDFS配置文件
  1) hadoop-env.sh
  
  
@@ -145,7 +145,7 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     </property>
     
     
-* YARN配置文件
+###### YARN配置文件
 1) yarn-env.sh
 
 
@@ -185,7 +185,7 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     </property>      
     
     
-* MapReduce配置文件  
+###### MapReduce配置文件  
 1) mapred-env.sh
 
 
@@ -217,18 +217,18 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
 
 #### 集群单点启动(一般不采用这种方式，效率太低，而是采用群起集群)
 
-*　如果集群是第一次启动，需要格式化NameNode
+##### 如果集群是第一次启动，需要格式化NameNode
 
 
     hadoop namenode -format
     
-* 在rec-hadoop01上启动NameNode
+##### 在rec-hadoop01上启动NameNode
 
 
     hadoop-daemon.sh start namenode
     jps
     
-* 在rec-hadoop01、rec-hadoop02以及rec-hadoop03上分别启动DataNode
+##### 在rec-hadoop01、rec-hadoop02以及rec-hadoop03上分别启动DataNode
 
 
     hadoop-daemon.sh start datanode
@@ -237,17 +237,17 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     
 #### SSH 无密登录配置
 
-* 免密登录原理，如图:
+##### 免密登录原理，如图:
 
 
-* 生成公钥和私钥：
+##### 生成公钥和私钥：
 
 
     cd ~/.ssh
     ssh-keygen -t rsa    
     然后敲（三个回车），就会生成两个文件id_rsa（私钥）、id_rsa.pub（公钥）
         
- * 将公钥拷贝到要免密登录的目标机器上   
+##### 将公钥拷贝到要免密登录的目标机器上   
  
  
     ssh-copy-id rec-hadoop01   
@@ -256,7 +256,7 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
         
 **注意：以上步骤需要在3台主机上分别执行**  
 
-* .ssh文件夹下（~/.ssh）的文件功能解释
+##### .ssh文件夹下（~/.ssh）的文件功能解释
 
  | | |
 --------- | --------|  
@@ -268,7 +268,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
 
 #### 群起集群
 
-* 配置slaves
+##### 配置slaves
 
 
     cd etc/hadoop/slaves
@@ -279,7 +279,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     rec-hadoop02
     rec-hadoop03
     
-* 如果集群是第一次启动，需要格式化NameNode（注意格式化之前，一定要先停止上次启动的所有namenode和datanode进程，然后再删除data和log数据）
+** 如果集群是第一次启动，需要格式化NameNode（注意格式化之前，一定要先停止上次启动的所有namenode和datanode进程，然后再删除data和log数据）**
 
     
     cd /opt/module/hadoop-2.7.2
@@ -439,15 +439,20 @@ spark采用2.4.3版本
 ##### 配置历史服务器
 
 1) 修改 spark-defaults.conf.template 文件名为 spark-defaults.conf  
-mv spark-defaults.conf.template spark-defaults.conf
+
+
+    mv spark-defaults.conf.template spark-defaults.conf
 
 2) 修改 spark-default.conf 文件，配置日志存储路径   
-spark.eventLog.enabled true  
-spark.eventLog.dir hdfs://rec-hadoop01:9000/directory  
+
+
+    spark.eventLog.enabled true  
+    spark.eventLog.dir hdfs://rec-hadoop01:9000/directory  
 
 注意：需要启动 hadoop 集群，HDFS 上的目录需要提前存在。  
-sbin/start-dfs.sh  
-hadoop fs -mkdir /directory  
+
+    sbin/start-dfs.sh  
+    hadoop fs -mkdir /directory  
 
 3) 修改 spark-env.sh 文件, 添加日志配置
 
@@ -463,8 +468,12 @@ hadoop fs -mkdir /directory
     参数 3 含义：指定保存 Application 历史记录的个数，如果超过这个值，旧的应用程序信息将被删除，这个是内存中的应用数，而不是页面上显示的应用数。
 
 4) 修改 spark-defaults.conf  
-spark.yarn.historyServer.address=rec-hadoop01:18080  
-spark.history.ui.port=18080  
+
+
+    spark.yarn.historyServer.address=rec-hadoop01:18080  
+    spark.history.ui.port=18080  
 
 5) 启动历史服务  
-sbin/start-history-server.sh
+
+
+    sbin/start-history-server.sh
