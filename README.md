@@ -30,7 +30,8 @@ brew install scala@2.11
 * 新建系统变量SCALA_HOME：　D:\Program Files (x86)\scala
 * PATH：　D:\Program Files (x86)\scala\bin
 
-验证： scala -version  
+验证：   
+scala -version  
 
 ### hadoop集群
 hadoop集群采用apache hadoop 2.7.2版本
@@ -70,11 +71,11 @@ vim /etc/profile
 
 
 4. 重要目录：  
-* bin目录：存放对Hadoop相关服务（HDFS,YARN）进行操作的脚本  
-* etc目录：Hadoop的配置文件目录，存放Hadoop的配置文件  
-* lib目录：存放Hadoop的本地库（对数据进行压缩解压缩功能）  
-* sbin目录：存放启动或停止Hadoop相关服务的脚本  
-* share目录：存放Hadoop的依赖jar包、文档、和官方案例  
+* bin：存放对Hadoop相关服务（HDFS,YARN）进行操作的脚本  
+* etc：Hadoop的配置文件目录，存放Hadoop的配置文件  
+* lib：存放Hadoop的本地库（对数据进行压缩解压缩功能）  
+* sbin：存放启动或停止Hadoop相关服务的脚本  
+* share：存放Hadoop的依赖jar包、文档、和官方案例  
 
 #### 集群配置
 ##### 修改hostname
@@ -95,7 +96,7 @@ YARN | NodeManager  | ResourceManager/NodeManager | NodeManager |
 ###### 配置文件说明  
 Hadoop配置文件分两类：默认配置文件和自定义配置文件，只有用户想修改某一默认配置值时，才需要修改自定义配置文件，更改相应属性值。  
     
-####### 默认配置文件：
+###### 默认配置文件：
     
 要获取的默认文件 | 文件存放在Hadoop的jar包中的位置 |
 ------- | -------- |
@@ -104,115 +105,116 @@ Hadoop配置文件分两类：默认配置文件和自定义配置文件，只�
 [yarn-default.xml] | hadoop-yarn-common-2.7.2.jar/ yarn-default.xml |
 [mapred-default.xml] | hadoop-mapreduce-client-core-2.7.2.jar/ mapred-default.xml |  
 
-####### 自定义配置文件：  
+###### 自定义配置文件：  
 core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文件存放在$HADOOP_HOME/etc/hadoop这个路径上，用户可以根据项目需求重新进行修改配置。
 
 ###### 核心配置文件
 1) 配置core-site.xml  
 
+       <!-- 指定HDFS中NameNode的地址 -->
+       <property>
+	   <name>fs.defaultFS</name>
+	   <value>hdfs://rec-hadoop01:9000</value>
+       </property>
 
-    <!-- 指定HDFS中NameNode的地址 -->
-    <property>
-        <name>fs.defaultFS</name>
-        <value>hdfs://rec-hadoop01:9000</value>
-    </property>
-    
-    <!-- 指定Hadoop运行时产生文件的存储目录 -->
-    <property>
-        <name>hadoop.tmp.dir</name>
-        <value>/opt/module/hadoop-2.7.2/tmp</value>
-    </property>
+	<!-- 指定Hadoop运行时产生文件的存储目录 -->
+	
+       <property>
+	   <name>hadoop.tmp.dir</name>
+	   <value>/opt/module/hadoop-2.7.2/tmp</value>
+       </property>
     
     
 ###### HDFS配置文件
  1) hadoop-env.sh
  
  
-    export JAVA_HOME=/opt/module/jdk1.8.0_181
+    	export JAVA_HOME=/opt/module/jdk1.8.0_181
         
  2) hdfs-site.xml
  
  
-    <property>
-        <name>dfs.replication</name>
-        <value>3</value>
-    </property>
+        <property>
+             <name>dfs.replication</name>
+             <value>3</value>
+    	</property>
     
-    <!-- 指定Hadoop辅助名称节点主机配置 -->
-    <property>
-        <name>dfs.namenode.secondary.http-address</name>
-        <value>rec-hadoop03:50090</value>
-    </property>
+        <!-- 指定Hadoop辅助名称节点主机配置 -->
+	
+        <property>
+             <name>dfs.namenode.secondary.http-address</name>
+             <value>rec-hadoop03:50090</value>
+        </property>
     
     
 ###### YARN配置文件
 1) yarn-env.sh
 
 
-    export JAVA_HOME=/opt/module/jdk1.8.0_181
+        export JAVA_HOME=/opt/module/jdk1.8.0_181
         
 2) yarn-site.xml
 
 
-    <!-- Reducer获取数据的方式 -->
-    <property>
-        <name>yarn.nodemanager.aux-services</name>
-        <value>mapreduce_shuffle</value>
-    </property>
+        <!-- Reducer获取数据的方式 -->
+        <property>
+	   <name>yarn.nodemanager.aux-services</name>
+	   <value>mapreduce_shuffle</value>
+        </property>
     
-    <!-- 指定YARN的ResourceManager的地址 -->
-    <property>
-        <name>yarn.resourcemanager.hostname</name>
-        <value>rec-hadoop02</value>
-    </property>      
+        <!-- 指定YARN的ResourceManager的地址 -->
+        <property>
+	   <name>yarn.resourcemanager.hostname</name>
+	   <value>rec-hadoop02</value>
+        </property>      
     
-    <!-- 日志聚集功能使能 -->
-    <property>
-       <name>yarn.log-aggregation-enable</name>
-       <value>true</value>
-    </property>
+        <!-- 日志聚集功能使能 -->
+        <property>
+	   <name>yarn.log-aggregation-enable</name>
+	   <value>true</value>
+        </property>
     
-    <!-- 日志保留时间设置3天 -->
-    <property>
-       <name>yarn.log-aggregation.retain-seconds</name>
-       <value>259200</value>
-    </property>
+        <!-- 日志保留时间设置3天 -->
+        <property>
+	   <name>yarn.log-aggregation.retain-seconds</name>
+	   <value>259200</value>
+        </property>
     
-    <!-- 日志链接跳转地址 -->
-    <property>
-       <name>yarn.log.server.url</name>
-       <value>http://rec-hadoop03:19888/jobhistory/logs</value>
-    </property>      
+        <!-- 日志链接跳转地址 -->
+        <property>
+	   <name>yarn.log.server.url</name>
+	   <value>http://rec-hadoop03:19888/jobhistory/logs</value>
+        </property>      
     
     
 ###### MapReduce配置文件  
 1) mapred-env.sh
 
 
-    export JAVA_HOME=/opt/module/jdk1.8.0_181
+        export JAVA_HOME=/opt/module/jdk1.8.0_181
      
 2) mapred-site.xml  
 
   
-    cp mapred-site.xml.template mapred-site.xml
-    vim mapred-site.xml
+        cp mapred-site.xml.template mapred-site.xml
+        vim mapred-site.xml
     
-    <!-- 指定MR运行在Yarn上 -->
-    <property>
-        <name>mapreduce.framework.name</name>
-        <value>yarn</value>
-    </property>
+        <!-- 指定MR运行在Yarn上 -->
+        <property>
+	   <name>mapreduce.framework.name</name>
+	   <value>yarn</value>
+        </property>
     
-    <!-- 历史服务器端地址 -->
-    <property>
-       <name>mapreduce.jobhistory.address</name>
-       <value>rec-hadoop03:10020</value>
-    </property>
-    <!-- 历史服务器web端地址 -->
-    <property>
-       <name>mapreduce.jobhistory.webapp.address</name>
-       <value>rec-hadoop03:19888</value>
-    </property>
+        <!-- 历史服务器端地址 -->
+        <property>
+	   <name>mapreduce.jobhistory.address</name>
+	   <value>rec-hadoop03:10020</value>
+        </property>
+        <!-- 历史服务器web端地址 -->
+        <property>
+	   <name>mapreduce.jobhistory.webapp.address</name>
+	   <value>rec-hadoop03:19888</value>
+        </property>
 
 
 #### 集群单点启动(一般不采用这种方式，效率太低，而是采用群起集群)
