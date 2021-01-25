@@ -4,7 +4,7 @@
 ## 环境搭建
 
 ### scala环境
-1、mac安装
+#### 1、mac安装
 
 brew install scala@2.11
 
@@ -19,7 +19,7 @@ brew install scala@2.11
 
 解决：删掉idea目录即可。
 
-2、windows安装
+#### 2、windows安装
 
 下载链接：https://www.scala-lang.org/download/2.11.12.html
 
@@ -51,13 +51,12 @@ hadoop集群采用apache hadoop 2.7.2版本
 #### 安装
 1. Hadoop下载地址：  
 https://archive.apache.org/dist/hadoop/common/hadoop-2.7.2/  
-将安装包下载到 /opt/software
+将安装包下载到 /opt/software  
 
 2. 安装路径：/opt/module  
 tar -zxvf hadoop-2.7.2.tar.gz -C /opt/module/
 
 3. 将Hadoop添加到环境变量和验证  
-
 vim /etc/profile  
 
 
@@ -87,18 +86,19 @@ vim /etc/profile
     每台机分别执行：hostnamectl set-hostname rec-hadoop01/rec-hadoop02/rec-hadoop03
     
 2. 集群部署规划
---------
 
 | | rec-hadoop01 | rec-hadoop02 | rec-hadoop03 |  
 ---------- | ---------- | --------| -------- |
 HDFS | NameNode/DataNode | DataNode | SecondaryNameNode/DataNode | 
 YARN | NodeManager  | ResourceManager/NodeManager | NodeManager |
 
+
 3. 集群配置
 
 * 配置文件说明  
 Hadoop配置文件分两类：默认配置文件和自定义配置文件，只有用户想修改某一默认配置值时，才需要修改自定义配置文件，更改相应属性值。  
-    * 默认配置文件：
+    
+* 默认配置文件：
     
 | | |
 ------- | -------- |
@@ -117,15 +117,16 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     
     <!-- 指定HDFS中NameNode的地址 -->
     <property>
-            <name>fs.defaultFS</name>
-          <value>hdfs://rec-hadoop01:9000</value>
+        <name>fs.defaultFS</name>
+        <value>hdfs://rec-hadoop01:9000</value>
     </property>
     
     <!-- 指定Hadoop运行时产生文件的存储目录 -->
     <property>
-            <name>hadoop.tmp.dir</name>
-            <value>/opt/module/hadoop-2.7.2/tmp</value>
+        <name>hadoop.tmp.dir</name>
+        <value>/opt/module/hadoop-2.7.2/tmp</value>
     </property>
+    
     
  * HDFS配置文件
     * hadoop-env.sh
@@ -146,6 +147,7 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
         <name>dfs.namenode.secondary.http-address</name>
         <value>rec-hadoop03:50090</value>
     </property>
+    
     
 * YARN配置文件
    * yarn-env.sh 
@@ -217,7 +219,8 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     </property>
 
 
-4. 集群单点启动(一般不采用这种方式，效率太低，而是采用群起集群)
+#### 集群单点启动(一般不采用这种方式，效率太低，而是采用群起集群)
+
 *　如果集群是第一次启动，需要格式化NameNode
 
    
@@ -236,9 +239,9 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     jps
     
     
-5. SSH 无密登录配置
+#### SSH 无密登录配置
 
-* 免密登录原理，如图2-40所示
+* 免密登录原理，如图:
 
 
 * 生成公钥和私钥：
@@ -267,7 +270,7 @@ id_rsa.pub | 生成的公钥 |
 authorized_keys | 存放授权过得无密登录服务器公钥 |  
 
 
-6. 群起集群
+#### 群起集群
 
 * 配置slaves
 
@@ -295,7 +298,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     
 ** 注意：NameNode和ResourceManger如果不是同一台机器，不能在NameNode上启动 YARN，应该在ResouceManager所在的机器上启动YARN。 **
 
-7. 集群基本测试
+#### 集群基本测试
 
     
     查看目录：
@@ -319,7 +322,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     删除文件：
     hadoop fs -rm -r /user/root/output
     
-8. 集群启动/停止方式总结  
+#### 集群启动/停止方式总结  
    * 各个服务组件逐一启动/停止  
         * 分别启动/停止HDFS组件  
    		hadoop-daemon.sh  start / stop  namenode / datanode / secondarynamenode  
@@ -335,7 +338,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
         * 整体启动/停止YARN  
    		start-yarn.sh  /  stop-yarn.sh  
 
-9. WordCount实例
+#### 执行WordCount实例
 
 
     hadoop fs -mkidr -p /test/input
@@ -349,7 +352,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
         world   1
         yarn    1
 
-10. 界面查看
+#### 界面查看
 
     
     hdfs：
@@ -359,10 +362,11 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     http://rec-hadoop02:8088/cluster/cluster
     http://rec-hadoop03:19888/jobhistory
 
+
 ### spark运行环境
 spark采用2.4.3版本
 
-1、Maven方式
+#### Maven方式
 
     <dependency>
         <groupId>org.apache.spark</groupId>
@@ -394,4 +398,74 @@ spark采用2.4.3版本
 	
 在Path下配置好对应的bin路径即可。（如果未生效，可尝试重启电脑）
 
-2、本地运行模式
+#### Yarn模式
+
+##### 解压缩文件  
+  tar -zxvf spark-2.4.3-bin-hadoop2.7.tgz -C /opt/module
+    
+##### 修改配置文件  
+
+1）修改 hadoop 配置文件/opt/module/hadoop/etc/hadoop/yarn-site.xml
+  
+  
+    <!--是否启动一个线程检查每个任务正使用的物理内存量，如果任务超出分配值，则直接将其杀掉，默认是 true -->
+    <property>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>false</value>
+    </property>
+    
+    <!--是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则直接将其杀掉，默认是 true -->
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+    </property>
+    
+2）修改 conf/spark-env.sh，添加 JAVA_HOME 和 YARN_CONF_DIR 配置
+  
+  
+    mv spark-env.sh.template spark-env.sh
+    ...
+    export JAVA_HOME=/opt/module/jdk1.8.0_181
+    YARN_CONF_DIR=/opt/module/hadoop-2.7.2/etc/hadoop
+    
+    
+##### 启动 HDFS 以及 YARN 集群
+
+##### 提交应用
+    bin/spark-submit --class org.apache.spark.examples.SparkPi --master yarn --deploy-mode cluster ./examples/jars/spark-examples_2.11-2.4.3.jar 10
+    
+    bin/spark-submit --class com.sparrowrecsys.offline.spark.embedding.Embedding --master yarn --deploy-mode cluster ./examples/jars/SparrowRecSysZero2One.jar file:///opt/module/spark-2.4.3/resources/ratings.csv /opt/module/spark-2.4.3/resources/item2vecEmb.csv 10
+    
+
+##### 配置历史服务器
+
+1) 修改 spark-defaults.conf.template 文件名为 spark-defaults.conf  
+mv spark-defaults.conf.template spark-defaults.conf
+
+2) 修改 spark-default.conf 文件，配置日志存储路径   
+spark.eventLog.enabled true  
+spark.eventLog.dir hdfs://rec-hadoop01:9000/directory  
+
+注意：需要启动 hadoop 集群，HDFS 上的目录需要提前存在。  
+sbin/start-dfs.sh  
+hadoop fs -mkdir /directory  
+
+3) 修改 spark-env.sh 文件, 添加日志配置
+
+
+    <!-- 配置spark历史（需先在hdfs上创建/directory目录） -->
+    export SPARK_HISTORY_OPTS="
+    -Dspark.history.ui.port=18080
+    -Dspark.history.fs.logDirectory=hdfs://rec-hadoop01:9000/directory
+    -Dspark.history.retainedApplications=30"
+    
+    参数 1 含义：WEB UI 访问的端口号为 18080
+    参数 2 含义：指定历史服务器日志存储路径
+    参数 3 含义：指定保存 Application 历史记录的个数，如果超过这个值，旧的应用程序信息将被删除，这个是内存中的应用数，而不是页面上显示的应用数。
+
+4) 修改 spark-defaults.conf  
+spark.yarn.historyServer.address=rec-hadoop01:18080  
+spark.history.ui.port=18080  
+
+5) 启动历史服务  
+sbin/start-history-server.sh
