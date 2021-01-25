@@ -1,5 +1,5 @@
 # SparrowRecSysZero2One
-本项目参考[SparrowRecSys](https://github.com/wzhe06/SparrowRecSys.git)实现，从0到1实践一个深度学习推荐系统的完整过程记录。
+本项目参考[SparrowRecSys](https://github.com/wzhe06/SparrowRecSys.git)实现，从0到1实践该深度学习推荐系统。
 
 ## 环境搭建
 
@@ -60,15 +60,14 @@ tar -zxvf hadoop-2.7.2.tar.gz -C /opt/module/
 vim /etc/profile  
 
 
-    ##HADOOP_HOME
     export HADOOP_HOME=/opt/module/hadoop-2.7.2
     export PATH=$PATH:$HADOOP_HOME/bin
     export PATH=$PATH:$HADOOP_HOME/sbin
     
-    # 保存、生效
+    保存、生效
     source /etc/profile
     
-    # 验证
+    验证
     hadoop version
 
 
