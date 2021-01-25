@@ -33,12 +33,11 @@ brew install scala@2.11
 验证： scala -version  
 
 ### hadoop集群
-hadoop集群采用apache hadoop 2.7.2版本、spark采用2.4.3版本。
+hadoop集群采用apache hadoop 2.7.2版本
 
-#### hadoop
 注：hadoop有多种运行模式：本地运行模式、伪分布运行环境、完全分布式运行环境。本项目搭建完全分布式运行环境。
 
-##### 步骤
+#### 步骤
 1）准备3台客户机（关闭防火墙、静态ip、主机名称）  
 2）安装JDK  
 3）配置环境变量  
@@ -49,7 +48,7 @@ hadoop集群采用apache hadoop 2.7.2版本、spark采用2.4.3版本。
 8）配置ssh  
 9）群起并测试集群  
 
-##### 安装hadoop
+#### 安装
 1. Hadoop下载地址：  
 https://archive.apache.org/dist/hadoop/common/hadoop-2.7.2/  
 将安装包下载到 /opt/software
@@ -81,7 +80,7 @@ vim /etc/profile
 * sbin目录：存放启动或停止Hadoop相关服务的脚本  
 * share目录：存放Hadoop的依赖jar包、文档、和官方案例  
 
-##### 集群配置
+#### 集群配置
 1. 修改hostname
     
     
@@ -360,7 +359,9 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     http://rec-hadoop02:8088/cluster/cluster
     http://rec-hadoop03:19888/jobhistory
 
-#### spark运行环境
+### spark运行环境
+spark采用2.4.3版本
+
 1、Maven方式
 
     <dependency>
