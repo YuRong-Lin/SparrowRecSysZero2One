@@ -495,4 +495,51 @@ dnf group install "Development Tools"
 
 ### 通过conda安装tf
     conda create -n sparrowRec python=3.7
+    conda activate sparrowRec
     pip install --upgrade tensorflow -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com 
+
+
+### jupyter notebook
+    pip install jupyter notebook
+  
+#### 远程访问配置
+##### 生成默认配置文件
+    jupyter notebook --generate-config
+    将会在用户主目录下生成.jupyter文件夹，其中jupyter_notebook_config.py就是刚刚生成的配置文件
+
+##### 生成秘钥
+    输入 ipython，进入ipyhon命令行
+    输入
+    In [1]: from notebook.auth import passwd
+
+    In [2]: passwd()
+    这里要求你输入以后登录使用的密码，然后生成一个秘钥，记得保存好秘钥，以免丢失。
+
+    Enter password: 
+    Verify password: 
+    Out[2]: 'argon2:$argon2id$v=19$m=10240,t=10,p=8$zQmpCHcCTHa625NSKha7Qw$ncLzWZudQNa0/I07PwcskQ'
+    
+##### 修改配置文件
+    修改用户主目录下~/.jupyter/jupyter_notebook_config.py文件  
+    取消c.NotebookApp.password = ''"注释，并将生成的秘钥复制进去  
+
+    c.NotebookApp.password = 'argon2:$argon2id$v=19$m=10240,t=10,p=8$zQmpCHcCTHa625NSKha7Qw$ncLzWZudQNa0/I07PwcskQ'
+   
+    取消下面几项注释，并注释修改ip、端口、不自动打开浏览器  
+    c.NotebookApp.ip='*' #×允许任何ip访问  
+    c.NotebookApp.open_browser = False  
+    c.NotebookApp.port =8888 #可自行指定一个端口, 访问时使用该端口  
+    c.NotebookApp.allow_remote_access = True
+    c.NotebookApp.allow_root = True
+    
+    
+#### 启动并访问http://rec-hadoop03:8888/
+    jupyter notebook
+    
+    [W 19:09:17.996 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
+    [I 19:09:17.999 NotebookApp] 启动notebooks 在本地路径: /root
+    [I 19:09:18.000 NotebookApp] Jupyter Notebook 6.2.0 is running at:
+    [I 19:09:18.000 NotebookApp] http://rec-hadoop03:8888/
+
+
+
