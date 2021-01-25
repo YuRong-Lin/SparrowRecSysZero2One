@@ -97,9 +97,8 @@ Hadoop配置文件分两类：默认配置文件和自定义配置文件，只�
     
 * 默认配置文件：
     
-| | |
+要获取的默认文件 | 文件存放在Hadoop的jar包中的位置 |
 ------- | -------- |
-要获取的默认文件 | 文件存放在Hadoop的jar包中的位置 |  
 [core-default.xml] | hadoop-common-2.7.2.jar/ core-default.xml |
 [hdfs-default.xml] | hadoop-hdfs-2.7.2.jar/ hdfs-default.xml |
 [yarn-default.xml] | hadoop-yarn-common-2.7.2.jar/ yarn-default.xml |
@@ -109,9 +108,9 @@ Hadoop配置文件分两类：默认配置文件和自定义配置文件，只�
 core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文件存放在$HADOOP_HOME/etc/hadoop这个路径上，用户可以根据项目需求重新进行修改配置。
 
 * 核心配置文件
-    * 配置core-site.xml
-    
-    
+1) 配置core-site.xml  
+
+
     <!-- 指定HDFS中NameNode的地址 -->
     <property>
         <name>fs.defaultFS</name>
@@ -126,14 +125,14 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     
     
  * HDFS配置文件
-    * hadoop-env.sh
-    
-    
+ 1) hadoop-env.sh
+ 
+ 
     export JAVA_HOME=/opt/module/jdk1.8.0_181
         
-   * hdfs-site.xml
-   
-   
+ 2) hdfs-site.xml
+ 
+ 
     <property>
         <name>dfs.replication</name>
         <value>3</value>
@@ -147,14 +146,14 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     
     
 * YARN配置文件
-   * yarn-env.sh 
-    
-    
+1) yarn-env.sh
+
+
     export JAVA_HOME=/opt/module/jdk1.8.0_181
         
-   * yarn-site.xml
-   
-   
+2) yarn-site.xml
+
+
     <!-- Reducer获取数据的方式 -->
     <property>
         <name>yarn.nodemanager.aux-services</name>
@@ -172,13 +171,13 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
        <name>yarn.log-aggregation-enable</name>
        <value>true</value>
     </property>
-
+    
     <!-- 日志保留时间设置3天 -->
     <property>
        <name>yarn.log-aggregation.retain-seconds</name>
        <value>259200</value>
     </property>
-
+    
     <!-- 日志链接跳转地址 -->
     <property>
        <name>yarn.log.server.url</name>
@@ -186,15 +185,15 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
     </property>      
     
     
-* MapReduce配置文件
-   * mapred-env.sh
-    
-    
+* MapReduce配置文件  
+1) mapred-env.sh
+
+
     export JAVA_HOME=/opt/module/jdk1.8.0_181
      
-   * mapred-site.xml    
-    
-    
+2) mapred-site.xml  
+
+  
     cp mapred-site.xml.template mapred-site.xml
     vim mapred-site.xml
     
@@ -220,7 +219,7 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
 
 *　如果集群是第一次启动，需要格式化NameNode
 
-   
+
     hadoop namenode -format
     
 * 在rec-hadoop01上启动NameNode
@@ -243,18 +242,18 @@ core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文�
 
 * 生成公钥和私钥：
 
-    
+
     cd ~/.ssh
     ssh-keygen -t rsa    
     然后敲（三个回车），就会生成两个文件id_rsa（私钥）、id_rsa.pub（公钥）
-    
- * 将公钥拷贝到要免密登录的目标机器上
+        
+ * 将公钥拷贝到要免密登录的目标机器上   
  
  
     ssh-copy-id rec-hadoop01   
-    ssh-copy-id rec-hadoop02
-    ssh-copy-id rec-hadoop03
-    
+    ssh-copy-id rec-hadoop02   
+    ssh-copy-id rec-hadoop03  
+        
 **注意：以上步骤需要在3台主机上分别执行**  
 
 * .ssh文件夹下（~/.ssh）的文件功能解释
@@ -295,6 +294,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     
 ** 注意：NameNode和ResourceManger如果不是同一台机器，不能在NameNode上启动 YARN，应该在ResouceManager所在的机器上启动YARN。 **
 
+
 #### 集群基本测试
 
     
@@ -318,6 +318,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
     
     删除文件：
     hadoop fs -rm -r /user/root/output
+    
     
 #### 集群启动/停止方式总结  
    * 各个服务组件逐一启动/停止  
@@ -362,6 +363,7 @@ authorized_keys | 存放授权过得无密登录服务器公钥 |
 
 ### spark运行环境
 spark采用2.4.3版本
+
 
 #### Maven方式
 
