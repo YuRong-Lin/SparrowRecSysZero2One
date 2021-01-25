@@ -478,3 +478,21 @@ spark采用2.4.3版本
 
 
     sbin/start-history-server.sh
+
+
+### conda
+https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
+
+    下载安装文件：Miniconda3-py37_4.9.2-Linux-x86_64.sh
+
+    执行：
+    bash Miniconda3-py37_4.9.2-Linux-x86_64.sh
+    
+    
+### gcc 环境
+dnf group install "Development Tools"
+
+
+### 通过conda安装tf
+    conda create -n sparrowRec python=3.7
+    pip install --upgrade tensorflow -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com 
