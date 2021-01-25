@@ -64,10 +64,8 @@ vim /etc/profile
     export PATH=$PATH:$HADOOP_HOME/bin
     export PATH=$PATH:$HADOOP_HOME/sbin
     
-    保存、生效
     source /etc/profile
     
-    验证
     hadoop version
 
 
