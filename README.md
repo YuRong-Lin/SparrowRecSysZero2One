@@ -581,3 +581,6 @@ dnf group install "Development Tools"
     "bip":"172.200.0.1/24"
     
     注：如果多台机器上都装了docker，这个网段需不一样：如："bip":"172.201.0.1/24"、"bip":"172.202.0.1/24"
+    
+    重启：
+    systemctl restart docker
