@@ -542,4 +542,35 @@ dnf group install "Development Tools"
     [I 19:09:18.000 NotebookApp] http://rec-hadoop03:8888/
 
 
+### Docker
+#### 安装yum-utils和添加docker下载源
+    sudo yum install -y yum-utils
+    
+    sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    
+    官网可能比较慢，可采用阿里云加速：
+    sudo yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 
+#### 安装与验证
+    sudo yum install docker-ce docker-ce-cli containerd.io
+    
+    docker version
+    
+#### # 启动docker
+    sudo systemctl start docker
+
+#### 设置开机自启
+    sudo systemctl enable docker
+
+#### 配置阿里云镜像下载加速
+    登录阿里云，搜索“容器镜像服务”，找到镜像加速器的对应系统版本，按说明操作即可。
+    
+    如centos：
+    sudo mkdir -p /etc/docker
+    sudo tee /etc/docker/daemon.json <<-'EOF'
+    {
+      "registry-mirrors": ["https://hnah5dzx.mirror.aliyuncs.com"]
+    }
+    EOF
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
