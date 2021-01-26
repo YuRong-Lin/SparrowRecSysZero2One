@@ -170,7 +170,6 @@ object FeatureEngForRecModel {
    */
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
-
     val sparkSession = SparkSession.builder.appName("FeatureEngForRecModel").getOrCreate()
 
     val movieSamplePath = args(0)
