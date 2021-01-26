@@ -556,7 +556,7 @@ dnf group install "Development Tools"
     
     docker version
     
-#### # 启动docker
+#### 启动docker
     sudo systemctl start docker
 
 #### 设置开机自启
@@ -574,3 +574,10 @@ dnf group install "Development Tools"
     EOF
     sudo systemctl daemon-reload
     sudo systemctl restart docker
+    
+#### 修改默认网段（默认网段跟内网可能冲突）
+    vim /etc/docker/daemon.json
+    添加：
+    "bip":"172.200.0.1/24"
+    
+    注：如果多台机器上都装了docker，这个网段需不一样：如："bip":"172.201.0.1/24"、"bip":"172.202.0.1/24"
